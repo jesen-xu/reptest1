@@ -1,0 +1,456 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mager.Mapper.IMapper.personBaseMapper">
+
+
+    <insert id="insertperson">
+        INSERT INTO `person`
+        (
+        <trim suffixOverrides=",">
+            <if test="ID!=null">
+                `ID`,
+            </if>
+            <if test="name!=null">
+                `name`,
+            </if>
+            <if test="old!=null">
+                `old`,
+            </if>
+            <if test="adress!=null">
+                `adress`,
+            </if>
+        </trim>
+        )
+        VALUES
+        (
+        <trim suffixOverrides=",">
+            <if test="ID!=null">
+                #{ID},
+            </if>
+            <if test="name!=null">
+                #{name},
+            </if>
+            <if test="old!=null">
+                #{old},
+            </if>
+            <if test="adress!=null">
+                #{adress},
+            </if>
+        </trim>
+        )
+    </insert>
+
+
+    <update id="updateperson">
+        UPDATE `person`
+        SET
+        <trim suffixOverrides=",">
+            <if test="name != null and name!=''">
+                `name` = #{name},
+            </if>
+            <if test="old != null and old!=''">
+                `old` = #{old},
+            </if>
+            <if test="adress != null and adress!=''">
+                `adress` = #{adress},
+            </if>
+        </trim>
+        WHERE
+        <trim suffixOverrides="and">
+            `ID` = #{ID} and
+        </trim>
+    </update>
+
+    <update id="update">
+        UPDATE `person`
+        SET
+        <trim suffixOverrides=",">
+            <if test="set.name != null and set.name!=''">
+                `name` = #{set.name},
+            </if>
+            <if test="set.old != null and set.old!=''">
+                `old` = #{set.old},
+            </if>
+            <if test="set.adress != null and set.adress!=''">
+                `adress` = #{set.adress},
+            </if>
+        </trim>
+        <trim prefix="where" suffixOverrides="and | or">
+            <if test="where.IDList != null">
+                `ID` in
+                <foreach collection="where.IDList" close=")" open="(" separator="," item="item">
+                    #{item}
+                </foreach>
+                and
+            </if>
+            <if test="where.fuzzyID!=null and where.fuzzyID.size()>0">
+                (
+                <foreach collection="where.fuzzyID" separator="or" item="item">
+                    `ID` like concat('%',#{item},'%')
+                </foreach>
+                ) and
+            </if>
+            <if test="where.rightFuzzyID!=null and where.rightFuzzyID.size()>0">
+                (
+                <foreach collection="where.rightFuzzyID" separator="or" item="item">
+                    `ID` like concat(#{item},'%')
+                </foreach>
+                ) and
+            </if>
+            <if test="where.nameList != null">
+                `name` in
+                <foreach collection="where.nameList" close=")" open="(" separator="," item="item">
+                    #{item}
+                </foreach>
+                and
+            </if>
+            <if test="where.fuzzyName!=null and where.fuzzyName.size()>0">
+                (
+                <foreach collection="where.fuzzyName" separator="or" item="item">
+                    `Name` like concat('%',#{item},'%')
+                </foreach>
+                ) and
+            </if>
+            <if test="where.rightFuzzyName!=null and where.rightFuzzyName.size()>0">
+                (
+                <foreach collection="where.rightFuzzyName" separator="or" item="item">
+                    `Name` like concat(#{item},'%')
+                </foreach>
+                ) and
+            </if>
+            <if test="where.oldList != null">
+                `old` in
+                <foreach collection="where.oldList" close=")" open="(" separator="," item="item">
+                    #{item}
+                </foreach>
+                and
+            </if>
+            <if test="where.fuzzyOld!=null and where.fuzzyOld.size()>0">
+                (
+                <foreach collection="where.fuzzyOld" separator="or" item="item">
+                    `Old` like concat('%',#{item},'%')
+                </foreach>
+                ) and
+            </if>
+            <if test="where.rightFuzzyOld!=null and where.rightFuzzyOld.size()>0">
+                (
+                <foreach collection="where.rightFuzzyOld" separator="or" item="item">
+                    `Old` like concat(#{item},'%')
+                </foreach>
+                ) and
+            </if>
+            <if test="where.adressList != null">
+                `adress` in
+                <foreach collection="where.adressList" close=")" open="(" separator="," item="item">
+                    #{item}
+                </foreach>
+                and
+            </if>
+            <if test="where.fuzzyAdress!=null and where.fuzzyAdress.size()>0">
+                (
+                <foreach collection="where.fuzzyAdress" separator="or" item="item">
+                    `Adress` like concat('%',#{item},'%')
+                </foreach>
+                ) and
+            </if>
+            <if test="where.rightFuzzyAdress!=null and where.rightFuzzyAdress.size()>0">
+                (
+                <foreach collection="where.rightFuzzyAdress" separator="or" item="item">
+                    `Adress` like concat(#{item},'%')
+                </foreach>
+                ) and
+            </if>
+        </trim>
+    </update>
+
+
+    <resultMap type="com.mager.Person" id="personMap">
+        <result property="ID" column="ID"/>
+        <result property="name" column="name"/>
+        <result property="old" column="old"/>
+        <result property="adress" column="adress"/>
+    </resultMap>
+
+
+    <select id="queryperson" resultMap="personMap">
+        select
+        <include refid="baseResult"></include>
+        from `person`
+        <trim prefix="where" suffixOverrides="and | or">
+            <if test="ID != null and ID!=''">
+                `ID` = #{ID} and
+            </if>
+            <if test="name != null and name!=''">
+                `name` = #{name} and
+            </if>
+            <if test="old != null and old!=''">
+                `old` = #{old} and
+            </if>
+            <if test="adress != null and adress!=''">
+                `adress` = #{adress} and
+            </if>
+            <if test="(_parameter instanceof packageModel.person$QueryBuilder) == true">
+                <if test="IDList != null">
+                    `ID` in
+                    <foreach collection="IDList" close=")" open="(" separator="," item="item">
+                        #{item}
+                    </foreach>
+                    and
+                </if>
+                <if test="fuzzyID!=null and fuzzyID.size()>0">
+                    (
+                    <foreach collection="fuzzyID" separator="or" item="item">
+                        `ID` like concat('%',#{item},'%')
+                    </foreach>
+                    ) and
+                </if>
+                <if test="rightFuzzyID!=null and rightFuzzyID.size()>0">
+                    (
+                    <foreach collection="rightFuzzyID" separator="or" item="item">
+                        `ID` like concat(#{item},'%')
+                    </foreach>
+                    ) and
+                </if>
+                <if test="nameList != null">
+                    `name` in
+                    <foreach collection="nameList" close=")" open="(" separator="," item="item">
+                        #{item}
+                    </foreach>
+                    and
+                </if>
+                <if test="fuzzyName!=null and fuzzyName.size()>0">
+                    (
+                    <foreach collection="fuzzyName" separator="or" item="item">
+                        `Name` like concat('%',#{item},'%')
+                    </foreach>
+                    ) and
+                </if>
+                <if test="rightFuzzyName!=null and rightFuzzyName.size()>0">
+                    (
+                    <foreach collection="rightFuzzyName" separator="or" item="item">
+                        `Name` like concat(#{item},'%')
+                    </foreach>
+                    ) and
+                </if>
+                <if test="oldList != null">
+                    `old` in
+                    <foreach collection="oldList" close=")" open="(" separator="," item="item">
+                        #{item}
+                    </foreach>
+                    and
+                </if>
+                <if test="fuzzyOld!=null and fuzzyOld.size()>0">
+                    (
+                    <foreach collection="fuzzyOld" separator="or" item="item">
+                        `Old` like concat('%',#{item},'%')
+                    </foreach>
+                    ) and
+                </if>
+                <if test="rightFuzzyOld!=null and rightFuzzyOld.size()>0">
+                    (
+                    <foreach collection="rightFuzzyOld" separator="or" item="item">
+                        `Old` like concat(#{item},'%')
+                    </foreach>
+                    ) and
+                </if>
+                <if test="adressList != null">
+                    `adress` in
+                    <foreach collection="adressList" close=")" open="(" separator="," item="item">
+                        #{item}
+                    </foreach>
+                    and
+                </if>
+                <if test="fuzzyAdress!=null and fuzzyAdress.size()>0">
+                    (
+                    <foreach collection="fuzzyAdress" separator="or" item="item">
+                        `Adress` like concat('%',#{item},'%')
+                    </foreach>
+                    ) and
+                </if>
+                <if test="rightFuzzyAdress!=null and rightFuzzyAdress.size()>0">
+                    (
+                    <foreach collection="rightFuzzyAdress" separator="or" item="item">
+                        `Adress` like concat(#{item},'%')
+                    </foreach>
+                    ) and
+                </if>
+            </if>
+        </trim>
+    </select>
+
+    <select id="querypersonLimit1" resultMap="personMap">
+        select
+        <include refid="baseResult"></include>
+        from `person`
+        <trim prefix="where" suffixOverrides="and | or">
+            <if test="ID != null and ID!=''">
+                `ID` = #{ID} and
+            </if>
+            <if test="name != null and name!=''">
+                `name` = #{name} and
+            </if>
+            <if test="old != null and old!=''">
+                `old` = #{old} and
+            </if>
+            <if test="adress != null and adress!=''">
+                `adress` = #{adress} and
+            </if>
+            <if test="(_parameter instanceof packageModel.person$QueryBuilder) == true">
+                <if test="IDList != null">
+                    `ID` in
+                    <foreach collection="IDList" close=")" open="(" separator="," item="item">
+                        #{item}
+                    </foreach>
+                    and
+                </if>
+                <if test="fuzzyID!=null and fuzzyID.size()>0">
+                    (
+                    <foreach collection="fuzzyID" separator="or" item="item">
+                        `ID` like concat('%',#{item},'%')
+                    </foreach>
+                    ) and
+                </if>
+                <if test="rightFuzzyID!=null and rightFuzzyID.size()>0">
+                    (
+                    <foreach collection="rightFuzzyID" separator="or" item="item">
+                        `ID` like concat(#{item},'%')
+                    </foreach>
+                    ) and
+                </if>
+                <if test="nameList != null">
+                    `name` in
+                    <foreach collection="nameList" close=")" open="(" separator="," item="item">
+                        #{item}
+                    </foreach>
+                    and
+                </if>
+                <if test="fuzzyName!=null and fuzzyName.size()>0">
+                    (
+                    <foreach collection="fuzzyName" separator="or" item="item">
+                        `Name` like concat('%',#{item},'%')
+                    </foreach>
+                    ) and
+                </if>
+                <if test="rightFuzzyName!=null and rightFuzzyName.size()>0">
+                    (
+                    <foreach collection="rightFuzzyName" separator="or" item="item">
+                        `Name` like concat(#{item},'%')
+                    </foreach>
+                    ) and
+                </if>
+                <if test="oldList != null">
+                    `old` in
+                    <foreach collection="oldList" close=")" open="(" separator="," item="item">
+                        #{item}
+                    </foreach>
+                    and
+                </if>
+                <if test="fuzzyOld!=null and fuzzyOld.size()>0">
+                    (
+                    <foreach collection="fuzzyOld" separator="or" item="item">
+                        `Old` like concat('%',#{item},'%')
+                    </foreach>
+                    ) and
+                </if>
+                <if test="rightFuzzyOld!=null and rightFuzzyOld.size()>0">
+                    (
+                    <foreach collection="rightFuzzyOld" separator="or" item="item">
+                        `Old` like concat(#{item},'%')
+                    </foreach>
+                    ) and
+                </if>
+                <if test="adressList != null">
+                    `adress` in
+                    <foreach collection="adressList" close=")" open="(" separator="," item="item">
+                        #{item}
+                    </foreach>
+                    and
+                </if>
+                <if test="fuzzyAdress!=null and fuzzyAdress.size()>0">
+                    (
+                    <foreach collection="fuzzyAdress" separator="or" item="item">
+                        `Adress` like concat('%',#{item},'%')
+                    </foreach>
+                    ) and
+                </if>
+                <if test="rightFuzzyAdress!=null and rightFuzzyAdress.size()>0">
+                    (
+                    <foreach collection="rightFuzzyAdress" separator="or" item="item">
+                        `Adress` like concat(#{item},'%')
+                    </foreach>
+                    ) and
+                </if>
+            </if>
+        </trim>
+        limit 1
+    </select>
+
+    <sql id="allResult">
+        <trim suffixOverrides=",">
+            `ID`,
+            `name`,
+            `old`,
+            `adress`,
+        </trim>
+    </sql>
+
+
+    <sql id="baseResult">
+        <trim suffixOverrides=",">
+            <if test="(_parameter instanceof packageModel.person$QueryBuilder) == true">
+
+                <if test="fetchFields==null">
+                    <include refid="allResult"></include>
+                </if>
+                <if test="fetchFields!=null">
+                    <if test="fetchFields.AllFields !=null">
+                        <include refid="allResult"></include>
+                    </if>
+                    <if test="fetchFields.AllFields ==null and fetchFields.fetchFields==null and fetchFields.excludeFields==null and fetchFields.otherFields==null">
+                        <include refid="allResult"></include>
+                    </if>
+                    <if test="fetchFields.AllFields==null and fetchFields.fetchFields!=null">
+                        <if test="fetchFields.fetchFields.ID==true">
+                            `ID`,
+                        </if>
+                        <if test="fetchFields.fetchFields.name==true">
+                            `name`,
+                        </if>
+                        <if test="fetchFields.fetchFields.old==true">
+                            `old`,
+                        </if>
+                        <if test="fetchFields.fetchFields.adress==true">
+                            `adress`,
+                        </if>
+                    </if>
+                    <if test="fetchFields.AllFields==null and fetchFields.excludeFields!=null">
+                        <if test="fetchFields.excludeFields.ID==null">
+                            `ID`,
+                        </if>
+                        <if test="fetchFields.excludeFields.name==null">
+                            `name`,
+                        </if>
+                        <if test="fetchFields.excludeFields.old==null">
+                            `old`,
+                        </if>
+                        <if test="fetchFields.excludeFields.adress==null">
+                            `adress`,
+                        </if>
+                    </if>
+                    <if test="fetchFields.otherFields!=null and fetchFields.otherFields.size>0">
+                        <foreach collection="fetchFields.otherFields" index="index" item="item" separator=",">
+                            `#{item}`
+                        </foreach>
+                    </if>
+                </if>
+            </if>
+            <if test="(_parameter instanceof packageModel.person$QueryBuilder) == false">
+                <include refid="allResult"></include>
+            </if>
+
+        </trim>
+    </sql>
+
+
+</mapper>
