@@ -17,6 +17,7 @@ public class PageController {
 
     public String showPage(@PathVariable String page) {
         System.out.println("ss");
+
         return page;
     }
 }
