@@ -1,0 +1,10 @@
+*.iml
+/manager/manager-mapper/*.iml
+/manager/manager-pojo/*.iml
+/manager/manager-service/*.iml
+/manager/manager-web/*.iml
+/manager/.idea
+/manager/manager-mapper/target
+/manager/manager-service/target
+/manager/manager-web/target
+/manager/manager-pojo/target
